@@ -58,4 +58,8 @@
     
     [image drawInRect:CGRectMake(0,0,rect.size.width,rect.size.height)];
 }
+
+-(void)dealloc{
+    _time=nil;
+}
 @end

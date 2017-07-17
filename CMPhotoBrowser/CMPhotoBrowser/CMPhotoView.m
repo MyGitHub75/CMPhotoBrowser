@@ -140,11 +140,9 @@
         [load stopAnimation];
         if (error) {
             [_hud showMessageWithText:error.localizedDescription];
-            
             return ;
         }
         [UIView animateWithDuration:index animations:^{
-
             [self setImagePosition:image];
  
         }];
