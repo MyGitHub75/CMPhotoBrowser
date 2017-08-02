@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CMPhotoView.h"
+
 @class CMPhoto;
 
 @interface CMPhotoBrowerCell : UICollectionViewCell

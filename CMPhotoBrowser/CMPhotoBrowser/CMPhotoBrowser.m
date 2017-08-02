@@ -49,12 +49,12 @@ static NSString * const CMReuseIdentifier = @"CMPhotoBrowerCell";
 
 //监听通知
 -(void)setupAddObserve{
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(dismissVC) name:@"touchit" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(longTapWithInfo:) name:@"longTap" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(dismissVC) name:CMPhotoViewDismissViewNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(longTapWithInfo:) name:CMPhotoViewLongTapNotification object:nil];
 }
 
 -(void)setupUI{
-    self.view.backgroundColor = [UIColor blackColor];
+    //self.view.backgroundColor = [UIColor blackColor];
     
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.minimumLineSpacing = 0;
@@ -99,7 +99,7 @@ static NSString * const CMReuseIdentifier = @"CMPhotoBrowerCell";
     _padgeControl.pageIndicatorTintColor = [UIColor grayColor];
     _padgeControl.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height-20);
     _padgeControl.currentPage = _currentPhotoIndex;
-    _padgeControl.hidden = self.photos.count==1;
+    _padgeControl.hidden = self.photos.count==1||self.isHiddenPadgeControl==1;
     [self.view addSubview:_padgeControl];
 }
 
@@ -136,9 +136,14 @@ static NSString * const CMReuseIdentifier = @"CMPhotoBrowerCell";
     
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     [window addSubview:self.view];
+    window.backgroundColor = [UIColor clearColor];
     [window.rootViewController addChildViewController:self];
     
     
+}
+
+-(void)setHiddenPadgeControl:(BOOL)hiddenPadgeControl{
+    _hiddenPadgeControl = hiddenPadgeControl;
 }
 
 #pragma mark - 屏幕点击触发操作
@@ -226,8 +231,8 @@ static NSString * const CMReuseIdentifier = @"CMPhotoBrowerCell";
 
 -(void)dealloc{
     
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"touchit" object:nil];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"longTap" object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:CMPhotoViewDismissViewNotification object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:CMPhotoViewLongTapNotification object:nil];
 
 }
 @end

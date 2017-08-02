@@ -21,6 +21,11 @@
 @property (nonatomic, assign) NSUInteger currentPhotoIndex;
 
 /**
+ *  是否隐藏图片索引，默认NO;
+ */
+@property (assign, nonatomic, getter=isHiddenPadgeControl) BOOL hiddenPadgeControl;
+
+/**
  *  显示
  */
 - (void)show;

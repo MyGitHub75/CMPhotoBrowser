@@ -60,7 +60,8 @@ static NSString * const reuseIdentifier = @"Cell";
                        @"http://ww4.sinaimg.cn/thumbnail/6aaeb4b8gw1f32b2mdjq0j20d60ghtaz.jpg",
                        @"http://ww1.sinaimg.cn/thumbnail/6aaeb4b8gw1f32b2o49cwj20d80gj769.jpg",
                        @"http://ww3.sinaimg.cn/thumbnail/6aaeb4b8gw1f32b2qjocsg205706ikjl.gif",
-                       @"http://ww2.sinaimg.cn/thumbnail/6aaeb4b8gw1f32b2ymkhxg206i0847wi.gif"];
+                       @"http://ww2.sinaimg.cn/thumbnail/6aaeb4b8gw1f32b2ymkhxg206i0847wi.gif",
+                       @"https://b-ssl.duitang.com/uploads/item/201112/15/20111215183154_CeRuv.jpg"];
     [self.smallUrlArray addObjectsFromArray:arr];
     [self.collectionView registerClass:[CollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     [self.collectionView reloadData];
@@ -102,7 +103,8 @@ static NSString * const reuseIdentifier = @"Cell";
                              @"http://ww4.sinaimg.cn/bmiddle/6aaeb4b8gw1f32b2mdjq0j20d60ghtaz.jpg",
                              @"http://ww1.sinaimg.cn/bmiddle/6aaeb4b8gw1f32b2o49cwj20d80gj769.jpg",
                              @"http://ww3.sinaimg.cn/bmiddle/6aaeb4b8gw1f32b2qjocsg205706ikjl.gif",
-                             @"http://ww2.sinaimg.cn/bmiddle/6aaeb4b8gw1f32b2ymkhxg206i0847wi.gif"];
+                             @"http://ww2.sinaimg.cn/bmiddle/6aaeb4b8gw1f32b2ymkhxg206i0847wi.gif",
+                             @"https://b-ssl.duitang.com/uploads/item/201112/15/20111215183154_CeRuv.thumb.700_0.jpg"];
     NSMutableArray *browseItemArray = [[NSMutableArray alloc]init];
     int i = 0;
     for(i = 0;i < [_smallUrlArray count];i++)

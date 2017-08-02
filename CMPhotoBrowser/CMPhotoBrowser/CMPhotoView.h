@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 @class CMPhoto;
 
+extern NSString * const CMPhotoViewDismissViewNotification;
+extern NSString * const CMPhotoViewLongTapNotification;
+
 @interface CMPhotoView : UIScrollView <UIScrollViewDelegate>
 
 /**

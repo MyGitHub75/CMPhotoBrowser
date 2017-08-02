@@ -26,6 +26,11 @@
 
 @end
 
+NSString * const CMPhotoViewDismissViewNotification = @"CMPhotoViewDismissViewNotification";
+NSString * const CMPhotoViewLongTapNotification = @"CMPhotoViewLongTapNotification";
+
+NSString * const CMCurrentImageViewId = @"CMCurrentImageViewId";
+
 @implementation CMPhotoView{
     CMLoadingView *_loadView;
     CMPhotoProgressHUD *_hud;
@@ -43,7 +48,7 @@
         self.bounces=NO;
         self.showsVerticalScrollIndicator = NO;
         self.decelerationRate = UIScrollViewDecelerationRateFast;
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        //self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         //添加单触操作
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapClick)];
         _singleTap = singleTap;
@@ -155,8 +160,13 @@
 - (void)setImagePosition:(UIImage *)image {
     CGSize size = [self imageSizeWithScreen:image];
     CGFloat x = (screenSize.width - size.width) * 0.5;
-    CGFloat y = (screenSize.height - size.height) * 0.5;
+    
+    CGFloat surplusHeight  = screenSize.height - size.height;
+    
+    CGFloat y = surplusHeight >= 0 ? surplusHeight * 0.5 : 0;
+    
     _imageView.frame = CGRectMake(x, y, size.width, size.height);
+    self.contentSize = CGSizeMake(size.width, size.height);
 }
 
 //适应屏幕尺寸
@@ -180,6 +190,7 @@
 //    _imageView.image = img;
 //    _imageView.contentMode = UIViewContentModeScaleToFill;
 //}
+
 // 点击事件取消图片浏览
 -(void)singleTapClick{
     _isDoubleTap = NO;
@@ -187,17 +198,26 @@
     [_loadView stopAnimation];
     
     self.backgroundColor = [UIColor clearColor];
-    [UIView animateWithDuration:.25 animations:^{
+    
+    //找到展位图在其父视图所在的位置进行动画交互
+    CGRect placeholderRect = [_photo.placeholder.superview convertRect:_photo.placeholder.frame toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+    
+    //占位符是否显示在当前屏幕
+    CGRect intersectionRect = CGRectIntersection(placeholderRect, [UIScreen mainScreen].bounds);
+    BOOL isNotDisplayScreen = CGRectIsEmpty(intersectionRect)||CGRectIsNull(intersectionRect);
+    if (isNotDisplayScreen) {
+        placeholderRect = _imageView.frame;
+    }
+    
+    [UIView animateWithDuration:.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.contentOffset = CGPointZero;
-        CGRect rect = [_photo.placeholder.superview convertRect:_photo.placeholder.frame toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
-        _imageView.frame = rect;
+        _imageView.alpha = isNotDisplayScreen ? 0:1;
+        _imageView.frame = placeholderRect;
+    } completion:^(BOOL finished) {
+        // 发出通知去 dissmissViewController
         
     }];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        // 发出通知去 dissmissViewController
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"touchit" object:self];
-    });
+    [[NSNotificationCenter defaultCenter]postNotificationName:CMPhotoViewDismissViewNotification object:self];
 }
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)tap {
@@ -221,10 +241,10 @@
 }
 
 -(void)longTapWithLongGuesture:(UILongPressGestureRecognizer *)longGuesture{
-    NSDictionary *picDic = [NSDictionary dictionaryWithObject:_imageView forKey:@"currentImageView"];
+    NSDictionary *picDic = [NSDictionary dictionaryWithObject:_imageView forKey:CMCurrentImageViewId];
     if(longGuesture.state == UIGestureRecognizerStateBegan){
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"longTap" object:self userInfo:picDic];
+        [[NSNotificationCenter defaultCenter]postNotificationName:CMPhotoViewLongTapNotification object:self userInfo:picDic];
     }
 }
 
@@ -232,7 +252,7 @@
 #pragma mark - UIScollViewDelegate
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
-    return _imageView;
+    return self.imageView;
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView

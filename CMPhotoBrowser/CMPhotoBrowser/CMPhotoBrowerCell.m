@@ -7,7 +7,6 @@
 //
 
 #import "CMPhotoBrowerCell.h"
-#import "CMPhotoView.h"
 #import "CMPhoto.h"
 
 
@@ -22,7 +21,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor=[UIColor clearColor];
+        //self.backgroundColor=[UIColor clearColor];
         [self.contentView addSubview:self.photoView];
     }
     return self;
@@ -34,6 +33,7 @@
     _photoView.photo = photo;
      
 }
+ 
 
 //懒加载
 -(CMPhotoView *)photoView{
